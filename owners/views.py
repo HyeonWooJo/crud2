@@ -1,3 +1,71 @@
-from django.shortcuts import render
+import email
+import json
 
-# Create your views here.
+from django.http import JsonResponse
+from django.views import View
+
+from .models import Dog, Owner
+
+class OwnerView(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        owner_name = data['owner_name']
+        owner_email = data['owner_email']
+        owner_age = data['owner_age']
+        
+
+        owner = Owner.objects.create(
+            name = owner_name,
+            email = owner_email,
+            age = owner_age
+        )
+
+        
+
+        return JsonResponse({'message': 'created'}, status=201)
+
+    def get(self, request):
+        owners = Owner.objects.all()
+        results = []
+
+        for owner in owners:
+            results.append(
+                {
+                    "name" : owner.name,
+                    "email" : owner.email,
+                    "age" : owner.age
+                }
+            )
+        
+        return JsonResponse({"results" : results}, status=200)
+
+class DogView(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        dog_name = data['dog_name']
+        dog_age = data['dog_age']
+        owner_id = data['owner_id']
+        
+
+        Dog.objects.create(
+            owner_id = owner_id,
+            name = dog_name,
+            age = dog_age
+        )
+
+        return JsonResponse({'message': 'created'}, status=201)
+
+    def get(self, request):
+        dogs = Dog.objects.all()
+        results = []
+
+        for dog in dogs:
+            results.append(
+                {
+                    "name" : dog.name,
+                    "age" : dog.age,
+                    "owner" : dog.owner.name
+                }
+            )
+        
+        return JsonResponse({'results' : results}, status=200)
