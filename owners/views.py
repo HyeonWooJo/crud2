@@ -20,8 +20,6 @@ class OwnerView(View):
             age = owner_age
         )
 
-        
-
         return JsonResponse({'message': 'created'}, status=201)
 
     def get(self, request):
@@ -29,11 +27,16 @@ class OwnerView(View):
         results = []
 
         for owner in owners:
+            dog_list = Dog.objects.filter(owner_id=owner.id)
+            dogs_name = [dog_list[i].name for i in range(len(dog_list))]
+            dogs_age = [dog_list[i].age for i in range(len(dog_list))]
             results.append(
                 {
-                    "name" : owner.name,
-                    "email" : owner.email,
-                    "age" : owner.age
+                    "dog_age" : list(dogs_age),
+                    "dog_name" : list(dogs_name),
+                    "owner_age" : owner.age,
+                    "owner_email" : owner.email,
+                    "owner_name" : owner.name
                 }
             )
         
@@ -62,8 +65,8 @@ class DogView(View):
         for dog in dogs:
             results.append(
                 {
-                    "name" : dog.name,
-                    "age" : dog.age,
+                    "name" : dog.name, 
+                    "age" : dog.age, 
                     "owner" : dog.owner.name
                 }
             )
