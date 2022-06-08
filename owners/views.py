@@ -32,11 +32,11 @@ class OwnerView(View):
             dogs_age = [dog_list[i].age for i in range(len(dog_list))]
             results.append(
                 {
-                    "dog_age" : list(dogs_age),
-                    "dog_name" : list(dogs_name),
+                    "owner_name" : owner.name,
                     "owner_age" : owner.age,
                     "owner_email" : owner.email,
-                    "owner_name" : owner.name
+                    "dog_name" : list(dogs_name),
+                    "dog_age" : list(dogs_age)
                 }
             )
         
